@@ -1,0 +1,64 @@
+<div class="row">
+	<div class="col-12">
+		<h1>{{title}} <sub>{{#if count}}({{count}}){{else}}(0){{/if}}</sub></h1>
+	</div>
+</div>
+<div class="row">
+	<div class="col-12">
+		{{#if count}}
+		<table class="table table-striped table-bordered">
+			<thead>
+				<tr>
+					<th>Resource</th>
+					<th>ID</th>
+					<th>Category</th>
+					<th>Action</th>
+				</tr>
+			</thead>
+			<tbody>
+				{{#each rows}}
+				<tr>
+					<td>
+						<a href="/read/{{this.id}}">
+							{{this.name}}
+						</a>
+					</td>
+					<td>{{this.identifier}}</td>
+					<td>{{this.category}}</td>
+					<td>
+						{{#if (or
+							( eq this.trash 1)
+							( eq this.sell 1)
+							( eq this.keep 1)
+						)}}
+							{{#if (eq this.keep 1) }}
+							Keep
+							{{/if}}
+							{{#if (eq this.sell 1) }}
+							Sell
+							{{/if}}
+							{{#if (eq this.trash 1) }}
+							Trash
+							{{/if}}
+						{{/if}}
+						{{#if (and
+							( eq this.trash 0)
+							( eq this.sell 0)
+							( eq this.keep 0)
+						)
+						}}
+						<div class="btn-group">
+							<a class="btn btn-primary" href="/trash/{{this.id}}">Trash</a>
+							<a class="btn btn-success" href="/sell/{{this.id}}">Sell</a>
+							<a class="btn btn-secondary" href="/keep/{{this.id}}">Keep</a>
+						{{/if}}
+					</td>
+				</tr>
+				{{/each}}
+			</tbody>
+		</table>
+		{{else}}
+		<i>No entries in inventory database</i>
+		{{/if}}
+	</div>
+</div>

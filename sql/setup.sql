@@ -1,0 +1,13 @@
+CREATE TABLE IF NOT EXISTS inventory (
+	id VARCHAR PRIMARY KEY,
+	created INTEGER,
+	updated INTEGER,
+	name VARCHAR,
+	category VARCHAR,
+	identifier VARCHAR,
+	notes VARCHAR,
+	trash INTEGER DEFAULT 0,
+	sell INTEGER DEFAULT 0,
+	keep INTEGER DEFAULT 0,
+	images VARCHAR
+);

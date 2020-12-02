@@ -1,0 +1,98 @@
+<style>
+	h4{
+		text-align:center;
+	}
+	#imageWrapper{
+		background: rgb(240, 240, 240);
+		border-radius: 10px;
+		height: 200px;
+		margin-bottom: 12px;
+	}
+	#imageWrapper .icon{
+		opacity: 0.3;
+		margin: 38px auto 0;
+		width: 124px;
+		height: auto;
+		display: block;
+	}
+	#imageWrapper.image .icon{
+		display: none;
+	}
+
+	#category{
+		width: calc(100% - 100px);
+		float: left;
+    	margin-bottom: 19px;
+	}
+	#addCategory{
+		width: 80px;
+		float: right;
+	}
+	.btn-group .btn{
+		width:33%;
+		opacity: 0.5;
+	}
+	.btn-group .btn:active,
+	.btn-group .btn.active{
+		opacity: 1.0;
+	}
+</style>
+
+<div class="row">
+	<div class="col-12">
+		{{#if data}}
+		<h4>{{data.name}}</h4>
+		{{else}}
+		<h4>{{title}}</h4>
+		{{/if}}
+	</div>
+</div>
+<div class="row">
+	<form method="POST" {{#if data}}action="/update/{{data.id}}"{{/if}} class="col-12">
+		<div id="imageWrapper">
+			<input id="image" name="image" type="file" accept="image/*" capture="camera" />
+			<img src="/assets/icon/image.svg" class="icon"/>
+		</div>
+		<div class="form-group">
+			<input type="text" class="form-control" name="name" id="name" placeholder="Name" {{#if data.name}}value="{{data.name}}"{{/if}} required>
+		</div>
+		<div class="form-group">
+			<div class="btn-group col-12" role="group" aria-label="Action">
+				<label class="btn btn-primary">
+					<input type="radio" name="action" value="trash" {{#if (eq data.trash 1)}}checked{{/if}} /> Trash
+				</label>
+				<label  class="btn btn-success">
+					<input type="radio" name="action" value="sell" {{#if (eq data.sell 1)}}checked{{/if}} /> Sell
+				</label>
+				<label class="btn btn-secondary">
+					<input type="radio" name="action" value="keep" {{#if (eq data.keep 1)}}checked{{/if}} /> Keep
+				</label>
+			</div>
+		</div>
+		<div class="form-group">
+			<input type="text" class="form-control" name="identifier" id="identifier" placeholder="Serial or other identifier" {{#if data.identifier}}value="{{data.identifier}}"{{/if}} >
+		</div>
+		<div class="form-group">
+			<select class="form-control" name="category" id="category">
+				{{#each categories}}
+				<option value="{{this.category}}" {{#if (eq ../data.category this.category)}}selected{{/if}}>{{this.category}}</option>
+				{{/each}}
+				<option> - Category - </option>
+			</select>
+			<span class="form-control btn btn-success" id="addCategory">+</span>
+		</div>
+		<div class="form-group">
+			<textarea name="notes" id="notes" class="form-control" placeholder="Notes">{{#if data.notes}}{{data.notes}}{{/if}}</textarea>
+		</div>
+		<div class="form-group">
+			{{#if data}}
+			<button type="submit" class="form-control btn btn-primary" id="update">Update</button>
+		</div>
+		<div class="form-group">
+			<a href="/delete/{{data.id}}" class="form-control  btn btn-danger" id="delete">Delete</a>
+			{{else}}
+			<button type="submit" class="form-control btn btn-primary" id="save">Save</button>
+			{{/if}}
+		</div>
+	</form>
+</div>

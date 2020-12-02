@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+	<title>{{title}}</title>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<link rel="stylesheet" href="/assets/css/bootstrap.css" />
+		<!--<link rel="stylesheet" href="/assets/css/theme.css" />-->
+		<style>
+			.header-row .col-12{
+				position:relative;
+			}
+			.header-row .col-12 > div {
+				font-size: 20px;
+				text-align: right;
+				display: inline-block;
+				float: right;
+			}
+			h1{
+				text-align: center;
+			}
+		</style>
+	</head>
+	<body>
+		<br />
+		<div class="container">
+			<div class="row header-row">
+				<div class="col-12">
+					<a href="/add" class="btn btn-success">Add</a>
+					<div>
+						<a href="/">All</a> | <a href="/sell">Sell</a> | <a href="/trash">Trash</a> | <a href="/keep">Keep</a>
+					</div>
+				</div>
+			</div>
+		{{{body}}}
+		</div>
+		<script src="/assets/js/jquery-slim.min.js"></script>
+		<script src="/assets/js/popper.min.js"></script>
+		<script src="/assets/js/bootstrap.js"></script>
+		<script src="/assets/js/create.js"></script>
+	</body>
+</html>

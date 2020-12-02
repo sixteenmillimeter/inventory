@@ -1,3 +1,4 @@
 node_modules
 .htpasswd
 images
+inventory.db

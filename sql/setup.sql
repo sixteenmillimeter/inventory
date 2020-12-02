@@ -9,5 +9,5 @@ CREATE TABLE IF NOT EXISTS inventory (
 	trash INTEGER DEFAULT 0,
 	sell INTEGER DEFAULT 0,
 	keep INTEGER DEFAULT 0,
-	images VARCHAR
+	image VARCHAR
 );

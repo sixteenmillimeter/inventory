@@ -1,21 +1,19 @@
 'use strict';
 
-/*
+
 function readURL(input) {
     if (input.files && input.files[0]) {
         var reader = new FileReader();
 
         reader.onload = function (e) {
-            $('#blah').attr('src', e.target.result);
+            $('#imageWrapper .display').attr('src', e.target.result);
+            $('#imageWrapper').addClass('image');
         }
 
         reader.readAsDataURL(input.files[0]);
     }
 }
 
-$("#imgInp").change(function(){
-    readURL(this);
-});*/
 
 function addCategory () {
     var val = prompt('Create new category');
@@ -39,7 +37,17 @@ function changeAction () {
     $('input[name=action][value="' + val + '"]').parent().addClass('active');
 }
 
+function openCamera (e) {
+    $('#image').trigger('click');
+    e.stopPropagation();
+    return false;
+}
+
 (function (){
 	$('#addCategory').on('click', addCategory);
     $('input[name=action]').on('change', changeAction);
+    $("#image").change(function () {
+        readURL(this);
+    });
+    $('#imageWrapper').on('mouseup', openCamera);
 })()

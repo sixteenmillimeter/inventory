@@ -7,6 +7,7 @@
 		border-radius: 10px;
 		height: 200px;
 		margin-bottom: 12px;
+		overflow:hidden;
 	}
 	#imageWrapper .icon{
 		opacity: 0.3;
@@ -17,6 +18,19 @@
 	}
 	#imageWrapper.image .icon{
 		display: none;
+	}
+	#imageWrapper .display{
+		display: none;
+	}
+	#imageWrapper.image .display{
+		display:block;
+		height: 200px;
+    	margin: 0 auto;
+	}
+
+	#image{
+		position: absolute;
+		left: -1000px;
 	}
 
 	#category{
@@ -48,10 +62,11 @@
 	</div>
 </div>
 <div class="row">
-	<form method="POST" {{#if data}}action="/update/{{data.id}}"{{/if}} class="col-12">
-		<div id="imageWrapper">
+	<form method="POST" enctype="multipart/form-data" {{#if data}}action="/update/{{data.id}}"{{/if}} class="col-12">
+		<div id="imageWrapper" {{#if data.image}}class="image"{{/if}}>
 			<input id="image" name="image" type="file" accept="image/*" capture="camera" />
 			<img src="/assets/icon/image.svg" class="icon"/>
+			<img class="display" {{#if data.image}}src="/{{data.image}}"{{/if}}/>
 		</div>
 		<div class="form-group">
 			<input type="text" class="form-control" name="name" id="name" placeholder="Name" {{#if data.name}}value="{{data.name}}"{{/if}} required>

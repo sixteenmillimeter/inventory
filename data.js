@@ -4,9 +4,12 @@ const { Database } = require('sqlite3').verbose();
 const { readFile } = require('fs-extra');
 const uuid = require('uuid').v4;
 const { promisify } = require('util');
+const { writeFile } = require('fs-extra');
+const { join, extname } = require('path');
 
 class Data {
 	constructor () {
+		this._FILES = process.env['FILES'] || './images/'
 		this._STRINGS = ['name', 'category', 'identifier', 'notes', 'images'];
 		this._DB_FILE = process.env['DB_FILE'] || 'inventory.db';
 		this._DB = new Database(this._DB_FILE);
@@ -125,6 +128,7 @@ class Data {
 			stm = this._DB.prepare(query);
 		} catch (err) {
 			console.error('Error preparing statement');
+			console.error(query);
 			console.error(err);
 			return false;
 		}
@@ -133,7 +137,7 @@ class Data {
 			stm.run(values);
 			stm.finalize();
 		} catch (err) {
-			console.error('Error executing query.');
+			console.error('Error executing update query.');
 			console.error(query);
 			console.error(values);
 			console.error(err);
@@ -185,6 +189,21 @@ class Data {
 			return false;
 		}
 		return true;
+	}
+
+	async file (file) {
+		const id = uuid();
+		const ext = extname(file.originalname);
+		const filePath = join(this._FILES, `${id}${ext}`)
+		
+		try {
+			await writeFile(filePath, file.buffer);
+		} catch (err) {
+			console.error(err);
+			return null
+		}
+
+		return filePath;
 	}
 
 	_safeString (str) {

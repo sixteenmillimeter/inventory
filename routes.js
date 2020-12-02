@@ -1,8 +1,13 @@
 'use strict';
 
+const multer = require('multer');
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+
 const Data = require('./data.js');
 const data = new Data();
 
+const IMAGES = process.env['IMAGES'] || './images/';
 
 async function home (req, res) {
 	let rows = [];
@@ -104,6 +109,10 @@ async function create (req, res) {
 			row.notes = req.body.notes;
 		}
 	}
+	if (req.uploads && req.uploads.image && req.uploads.image !== '') {
+		row.image = req.uploads.image;
+	}
+
 	try {
 		success = await data.create(row);
 	} catch (err) {
@@ -174,6 +183,7 @@ async function postUpdate (req, res) {
 	const row = {};
 	let success = false;
 	let id = null;
+
 	if (req.params && req.params.id) {
 		id = req.params.id;
 		if (req.body) {
@@ -199,10 +209,16 @@ async function postUpdate (req, res) {
 				row.notes = req.body.notes;
 			}
 		}
-		try {
-			success = await data.update(id, row);
-		} catch (err) {
-			console.error(err);
+		if (req.uploads && req.uploads.image && req.uploads.image !== '') {
+			row.image = req.uploads.image;
+		}
+
+		if (( Object.keys(row) ).length > 0) {
+			try {
+				success = await data.update(id, row);
+			} catch (err) {
+				console.error(err);
+			}
 		}
 	}
 	res.redirect(`/read/${id}`)
@@ -264,6 +280,32 @@ async function postDelete (req, res) {
 	res.redirect('/');
 }
 
+function fileFields (fields) {
+	return upload.fields(fields);
+}
+
+async function fileUpload (req, res, next) {
+	let fields = [];
+	let results = {};
+	if (req.files) {
+		fields = Object.keys(req.files);
+	} else {
+		return next();
+	}
+	for (let field of fields) {
+		for (let file of req.files[field] ) {
+			try {
+				results[field] = await data.file(file);
+			} catch (err) {
+				console.error(err);
+			}
+		}
+	}
+	req.uploads = results;
+	return next();
+}
+
+
 module.exports = function routes (app) {
 	app.get('/', home);
 	app.get('/sell', sell);
@@ -271,10 +313,10 @@ module.exports = function routes (app) {
 	app.get('/keep', keep);
 
 	app.get('/read/:id', read);
-	app.post('/update/:id', postUpdate)
+	app.post('/update/:id', fileFields([{ name : 'image', maxCount : 1}]), fileUpload, postUpdate)
 
 	app.get('/add', getCreate);
-	app.post('/add', create);
+	app.post('/add', fileFields([{ name : 'image', maxCount : 1}]), fileUpload, create);
 
 	app.get('/trash/:id', updateTrash);
 	app.get('/sell/:id', updateSell);

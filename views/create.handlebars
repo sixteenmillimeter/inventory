@@ -64,7 +64,7 @@
 <div class="row">
 	<form method="POST" enctype="multipart/form-data" {{#if data}}action="/update/{{data.id}}"{{/if}} class="col-12">
 		<div id="imageWrapper" {{#if data.image}}class="image"{{/if}}>
-			<input id="image" name="image" type="file" accept="image/*" capture="camera" />
+			<input id="image" name="image" type="file" accept="image/*" capture />
 			<img src="/assets/icon/image.svg" class="icon"/>
 			<img class="display" {{#if data.image}}src="/{{data.image}}"{{/if}}/>
 		</div>

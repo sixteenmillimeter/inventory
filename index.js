@@ -1,8 +1,6 @@
 'use strict';
 
-if (process.argv.indexOf('-d') !== -1 || process.argv.indexOf('--dev') !== -1) {
-	require('dotenv').config()
-}
+require('dotenv').config()
 
 const PORT = process.env['PORT'] || 3007;
 
@@ -29,8 +27,8 @@ app.use(bodyParser.urlencoded({
 }));
 
 app.use('/assets', express.static('./assets'));
-app.use('/images', express.static('./images'));
  
 routes(app);
  
 app.listen(PORT);
+console.log(`Listening on port ${PORT}`)

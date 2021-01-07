@@ -3,11 +3,11 @@
 const multer = require('multer');
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
+const { Files } = require('files3');
 
 const Data = require('./data.js');
 const data = new Data();
-
-const IMAGES = process.env['IMAGES'] || './images/';
+const files3 = new Files(process.env.S3_BUCKET, false);
 
 async function home (req, res) {
 	let rows = [];
@@ -298,6 +298,7 @@ async function fileUpload (req, res, next) {
 				results[field] = await data.file(file);
 			} catch (err) {
 				console.error(err);
+				return next(err);
 			}
 		}
 	}
@@ -305,6 +306,27 @@ async function fileUpload (req, res, next) {
 	return next();
 }
 
+async function getImages (req, res, next) {
+	let key = null;
+	let file = null;
+
+	if (req.params && req.params.key) {
+		key = req.params.key
+		try {
+			file = await files3.read(key);
+		} catch (err) {
+			console.error(err);
+			return next(err);
+		}
+		res.writeHead(200, {
+	        'Content-Type': 'image/jpeg',
+	        'Content-Length': file.length
+	    });
+	    res.end(file);
+	}
+
+	return next();
+}
 
 module.exports = function routes (app) {
 	app.get('/', home);
@@ -324,4 +346,6 @@ module.exports = function routes (app) {
 
 	app.get('/delete/:id', getDelete);
 	app.post('/delete/:id', postDelete);
+
+	app.get('/images/:key', getImages);
 }

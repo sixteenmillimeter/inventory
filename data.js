@@ -4,12 +4,15 @@ const { Database } = require('sqlite3').verbose();
 const { readFile } = require('fs-extra');
 const uuid = require('uuid').v4;
 const { promisify } = require('util');
-const { writeFile } = require('fs-extra');
 const { join, extname } = require('path');
+const { Files } = require('files3');
+const { getType } = require('mime');
+const sharp = require('sharp');
+
+const files3 = new Files(process.env.S3_BUCKET, true);
 
 class Data {
 	constructor () {
-		this._FILES = process.env['FILES'] || './images/'
 		this._STRINGS = ['name', 'category', 'identifier', 'notes', 'images'];
 		this._DB_FILE = process.env['DB_FILE'] || 'inventory.db';
 		this._DB = new Database(this._DB_FILE);
@@ -194,10 +197,25 @@ class Data {
 	async file (file) {
 		const id = uuid();
 		const ext = extname(file.originalname);
-		const filePath = join(this._FILES, `${id}${ext}`)
+		const filePath = `${id}${ext}`;
+		const mimetype = getType(filePath);
+		let outputBuffer;
 		
 		try {
-			await writeFile(filePath, file.buffer);
+			outputBuffer = await sharp(file.buffer)
+				.resize(2048, 2048, {
+					fit: sharp.fit.inside,
+					withoutEnlargement: true
+				})
+				.jpeg({quality: 80})
+				.toBuffer();
+		} catch (err) {
+			console.error(err);
+			return null
+		}
+		
+		try {
+			await files3.create(file, filePath);
 		} catch (err) {
 			console.error(err);
 			return null

@@ -68,6 +68,11 @@
 			<img src="/assets/icon/image.svg" class="icon"/>
 			<img class="display" {{#if data.image}}src="/images/{{data.image}}"{{/if}}/>
 		</div>
+		{{#if data.image}}
+		<div class="form-group">
+			<a href="/images/{{data.image}}">View Image</a>
+		</div>
+		{{/if}}
 		<div class="form-group">
 			<input type="text" class="form-control" name="name" id="name" placeholder="Name" {{#if data.name}}value="{{data.name}}"{{/if}} required>
 		</div>

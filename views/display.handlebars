@@ -9,7 +9,7 @@
 		<h3>{{this.identifier}}</h3><br />
 		<b>{{this.name}}</b><br />
 		<img src="/images/{{this.image}}" />
-		<p>{{this.notes}}</p>
+		{{#if this.notes}}<pre>{{this.notes}}</pre>{{/if}}
 	</div>
 </div>
 <hr />

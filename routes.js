@@ -328,6 +328,22 @@ async function getImages (req, res, next) {
 	return next();
 }
 
+async function getDisplay (req, res, next) {
+	let rows = [];
+	let count = null;
+	try {
+		rows = await data.read();
+	} catch (err) {
+		console.error(err);
+	}
+	if (!rows) {
+		res.status(500);
+	} else if (rows.length > 0) {
+		count = rows.length;
+	}
+	res.render('display', { title : 'Inventory', rows, count });
+}
+
 module.exports = function routes (app) {
 	app.get('/', home);
 	app.get('/sell', sell);
@@ -348,4 +364,6 @@ module.exports = function routes (app) {
 	app.post('/delete/:id', postDelete);
 
 	app.get('/images/:key', getImages);
+
+	app.get('/display', getDisplay);
 }
